@@ -2,11 +2,14 @@ module Main exposing (..)
 
 import Html exposing (Html, button, div, text, h1, h2, span, p)
 import Html.Events exposing (onClick)
+import Html.Attributes exposing (class)
 import Http
 import Json.Decode as Decode exposing (field)
 import Task
 import Array exposing (Array)
 import Random
+import RemoteData exposing (RemoteData(..), WebData)
+import Markdown
 
 
 main =
@@ -18,10 +21,6 @@ main =
         }
 
 
-
--- MODEL
-
-
 type alias Quote =
     { chapter : Int
     , section : Int
@@ -30,42 +29,48 @@ type alias Quote =
 
 
 type alias Model =
-    { quotes : Maybe (Array Quote)
+    { quotes : WebData (Array Quote)
     , number : Int
     }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( Model Nothing 0
+    ( { number = 0, quotes = Loading }
     , getQuotes
     )
 
 
-
--- UPDATE
-
-
 type Msg
     = Refresh
-    | FetchQuotes (Result Http.Error (Array Quote))
+    | DataResponse (WebData (Array Quote))
+    | NewQuote Int
+
+
+randomQuote model =
+    let
+        n =
+            case model.quotes of
+                Success quotes ->
+                    Array.length quotes
+
+                _ ->
+                    1
+    in
+        Random.generate NewQuote (Random.int 1 n)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Refresh ->
-            ( { model | number = 5 }, getQuotes )
+            ( model, randomQuote model )
 
-        FetchQuotes (Err _) ->
-            ( model, Cmd.none )
+        DataResponse resp ->
+            ( { model | quotes = resp }, randomQuote model )
 
-        FetchQuotes (Ok quotes) ->
-            ( { model | quotes = Just quotes }, Cmd.none )
-
-
-
--- SUBSCRIPTIONS
+        NewQuote i ->
+            ( { model | number = i }, Cmd.none )
 
 
 subscriptions : Model -> Sub Msg
@@ -73,43 +78,52 @@ subscriptions model =
     Sub.none
 
 
-
--- VIEW
-
-
-(>>=) m g =
-    case m of
-        Nothing ->
-            Nothing
-
-        Just x ->
-            g x
-
-
 view : Model -> Html Msg
 view model =
-    let
-        desc q =
-            "Chapter " ++ (toString q.chapter) ++ ", section " ++ (toString q.section)
+    case model.quotes of
+        NotAsked ->
+            text "Initializing."
 
+        Loading ->
+            text "Loading..."
+
+        Failure err ->
+            text ("Error: " ++ toString err)
+
+        Success quotes ->
+            viewQuote model.number quotes
+
+
+viewMeta : Quote -> Html Msg
+viewMeta q =
+    h2 []
+        [ text <|
+            "Chapter "
+                ++ (toString q.chapter)
+                ++ ", section "
+                ++ (toString q.section)
+        ]
+
+
+viewQuote : Int -> Array Quote -> Html Msg
+viewQuote num quotes =
+    let
         quote =
-            case model.quotes >>= Array.get model.number of
+            case Array.get num quotes of
                 Just quote ->
                     quote
 
                 Nothing ->
-                    { chapter = 0, section = 0, content = ["Error."]}
+                    { chapter = 0, section = 0, content = [ "Error." ] }
     in
         div []
             [ h1 [] [ text "Marcus Aurelius" ]
-            , h2 [] [ text <| desc quote ]
-            , p [] (List.map text quote.content)
+            , viewMeta quote
+            , quote.content
+                |> String.join "\n\n"
+                |> Markdown.toHtml [ class "content" ]
             , button [ onClick Refresh ] [ text "Refresh" ]
             ]
-
-
-
--- HTTP
 
 
 quotesUri : String
@@ -119,7 +133,9 @@ quotesUri =
 
 getQuotes : Cmd Msg
 getQuotes =
-    Http.send FetchQuotes <| Http.get quotesUri decodeQuotes
+    Http.get quotesUri decodeQuotes
+        |> RemoteData.sendRequest
+        |> Cmd.map DataResponse
 
 
 decodeQuotes : Decode.Decoder (Array Quote)
