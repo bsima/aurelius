@@ -74,16 +74,16 @@ view : Model -> Html Msg
 view model =
     case model.quotes of
         NotAsked ->
-            text "Initializing."
+            wrap <| p [] [ text "Initializing." ]
 
         Loading ->
-            text "Loading..."
+            wrap <| p [] [ text "Loading..." ]
 
         Failure err ->
-            text ("Error: " ++ toString err)
+            wrap <| p [] [ text ("Error: " ++ toString err) ]
 
         Success quotes ->
-            root model.number quotes
+            wrap <| viewQuote model.number quotes
 
 
 viewMeta : Quote -> Html Msg
@@ -121,8 +121,8 @@ viewQuote num quotes =
             ]
 
 
-root : Int -> Array Quote -> Html Msg
-root num qs =
+wrap : Html Msg -> Html Msg
+wrap kids =
     div [ id "content", class "wrapper" ]
         [ button
             [ class "sans"
@@ -136,7 +136,7 @@ root num qs =
             [ text "Refresh" ]
         , h1 [] [ text "Marcus Aurelius" ]
         , p [ class "subtitle" ] [ text "Meditations" ]
-        , viewQuote num qs
+        , kids
         ]
 
 
