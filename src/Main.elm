@@ -1,17 +1,17 @@
 module Main exposing (..)
 
-import Html exposing (Html, button, div, text, h1, h2, span, p)
+import Html exposing (Html, button, div, text, h1, h2, span, p, article)
 import Html.Events exposing (onClick)
-import Html.Attributes exposing (class)
+import Html.Attributes exposing (class, style, id)
 import Http
 import Json.Decode as Decode exposing (field)
-import Task
 import Array exposing (Array)
 import Random
 import RemoteData exposing (RemoteData(..), WebData)
 import Markdown
 
 
+main : Program Never Model Msg
 main =
     Html.program
         { init = init
@@ -47,6 +47,7 @@ type Msg
     | NewQuote Int
 
 
+randomQuote : Model -> Cmd Msg
 randomQuote model =
     let
         n =
@@ -91,7 +92,7 @@ view model =
             text ("Error: " ++ toString err)
 
         Success quotes ->
-            viewQuote model.number quotes
+            root model.number quotes
 
 
 viewMeta : Quote -> Html Msg
@@ -114,16 +115,36 @@ viewQuote num quotes =
                     quote
 
                 Nothing ->
-                    { chapter = 0, section = 0, content = [ "Error." ] }
+                    { chapter = 0
+                    , section = 0
+                    , content = [ "Error selecting quote. Please refresh" ]
+                    }
     in
-        div []
-            [ h1 [] [ text "Marcus Aurelius" ]
-            , viewMeta quote
+        article []
+            [ viewMeta quote
             , quote.content
                 |> String.join "\n\n"
                 |> Markdown.toHtml [ class "content" ]
-            , button [ onClick Refresh ] [ text "Refresh" ]
             ]
+
+
+root : Int -> Array Quote -> Html Msg
+root num qs =
+    div [ id "content", class "wrapper" ]
+        [ button
+            [ class "sans"
+            , style
+                [ ( "border", "none" )
+                , ( "background", "transparent" )
+                , ( "margin-top", "1rem" )
+                ]
+            , onClick Refresh
+            ]
+            [ text "Refresh" ]
+        , h1 [] [ text "Marcus Aurelius" ]
+        , p [ class "subtitle" ] [ text "Meditations" ]
+        , viewQuote num qs
+        ]
 
 
 quotesUri : String
