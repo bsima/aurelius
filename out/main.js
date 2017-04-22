@@ -9858,44 +9858,30 @@ var _user$project$Main$Model = F2(
 var _user$project$Main$NewQuote = function (a) {
 	return {ctor: 'NewQuote', _0: a};
 };
-var _user$project$Main$randomQuote = function (model) {
-	var n = function () {
-		var _p1 = model.quotes;
-		if (_p1.ctor === 'Success') {
-			return _elm_lang$core$Array$length(_p1._0);
-		} else {
-			return 1;
-		}
-	}();
-	return A2(
-		_elm_lang$core$Random$generate,
-		_user$project$Main$NewQuote,
-		A2(_elm_lang$core$Random$int, 0, n - 1));
-};
+var _user$project$Main$randomQuote = A2(
+	_elm_lang$core$Random$generate,
+	_user$project$Main$NewQuote,
+	A2(_elm_lang$core$Random$int, 0, 27));
 var _user$project$Main$update = F2(
 	function (msg, model) {
-		var _p2 = msg;
-		switch (_p2.ctor) {
+		var _p1 = msg;
+		switch (_p1.ctor) {
 			case 'Refresh':
-				return {
-					ctor: '_Tuple2',
-					_0: model,
-					_1: _user$project$Main$randomQuote(model)
-				};
+				return {ctor: '_Tuple2', _0: model, _1: _user$project$Main$randomQuote};
 			case 'DataResponse':
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{quotes: _p2._0}),
-					_1: _user$project$Main$randomQuote(model)
+						{quotes: _p1._0}),
+					_1: _user$project$Main$randomQuote
 				};
 			default:
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
-						{number: _p2._0}),
+						{number: _p1._0}),
 					_1: _elm_lang$core$Platform_Cmd$none
 				};
 		}
@@ -9996,8 +9982,8 @@ var _user$project$Main$root = F2(
 			});
 	});
 var _user$project$Main$view = function (model) {
-	var _p3 = model.quotes;
-	switch (_p3.ctor) {
+	var _p2 = model.quotes;
+	switch (_p2.ctor) {
 		case 'NotAsked':
 			return _elm_lang$html$Html$text('Initializing.');
 		case 'Loading':
@@ -10007,9 +9993,9 @@ var _user$project$Main$view = function (model) {
 				A2(
 					_elm_lang$core$Basics_ops['++'],
 					'Error: ',
-					_elm_lang$core$Basics$toString(_p3._0)));
+					_elm_lang$core$Basics$toString(_p2._0)));
 		default:
-			return A2(_user$project$Main$root, model.number, _p3._0);
+			return A2(_user$project$Main$root, model.number, _p2._0);
 	}
 };
 var _user$project$Main$main = _elm_lang$html$Html$program(
