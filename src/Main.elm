@@ -47,28 +47,19 @@ type Msg
     | NewQuote Int
 
 
-randomQuote : Model -> Cmd Msg
-randomQuote model =
-    let
-        n =
-            case model.quotes of
-                Success quotes ->
-                    Array.length quotes
-
-                _ ->
-                    1
-    in
-        Random.generate NewQuote (Random.int 0 (n-1))
+randomQuote : Cmd Msg
+randomQuote =
+    Random.generate NewQuote (Random.int 0 27)
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
         Refresh ->
-            ( model, randomQuote model )
+            ( model, randomQuote )
 
         DataResponse resp ->
-            ( { model | quotes = resp }, randomQuote model )
+            ( { model | quotes = resp }, randomQuote )
 
         NewQuote i ->
             ( { model | number = i }, Cmd.none )
