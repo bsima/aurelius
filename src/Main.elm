@@ -120,11 +120,13 @@ viewQuote num quotes =
                     , content = [ "Error selecting quote. Please refresh" ]
                     }
     in
-        article []
+        div []
             [ viewMeta quote
-            , quote.content
-                |> String.join "\n\n"
-                |> Markdown.toHtml [ class "content" ]
+            , article []
+                [ quote.content
+                    |> String.join "\n\n"
+                    |> Markdown.toHtml [ class "content" ]
+                ]
             ]
 
 
