@@ -58,7 +58,7 @@ randomQuote model =
                 _ ->
                     1
     in
-        Random.generate NewQuote (Random.int 1 n)
+        Random.generate NewQuote (Random.int 0 (n-1))
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
