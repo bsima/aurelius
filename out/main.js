@@ -9808,7 +9808,7 @@ var _user$project$Main$viewQuote = F2(
 			}
 		}();
 		return A2(
-			_elm_lang$html$Html$article,
+			_elm_lang$html$Html$div,
 			{ctor: '[]'},
 			{
 				ctor: '::',
@@ -9816,13 +9816,20 @@ var _user$project$Main$viewQuote = F2(
 				_1: {
 					ctor: '::',
 					_0: A2(
-						_evancz$elm_markdown$Markdown$toHtml,
+						_elm_lang$html$Html$article,
+						{ctor: '[]'},
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('content'),
+							_0: A2(
+								_evancz$elm_markdown$Markdown$toHtml,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('content'),
+									_1: {ctor: '[]'}
+								},
+								A2(_elm_lang$core$String$join, '\n\n', quote.content)),
 							_1: {ctor: '[]'}
-						},
-						A2(_elm_lang$core$String$join, '\n\n', quote.content)),
+						}),
 					_1: {ctor: '[]'}
 				}
 			});
@@ -9863,7 +9870,7 @@ var _user$project$Main$randomQuote = function (model) {
 	return A2(
 		_elm_lang$core$Random$generate,
 		_user$project$Main$NewQuote,
-		A2(_elm_lang$core$Random$int, 1, n));
+		A2(_elm_lang$core$Random$int, 0, n - 1));
 };
 var _user$project$Main$update = F2(
 	function (msg, model) {
