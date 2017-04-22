@@ -22,7 +22,7 @@ main =
 
 
 type alias Quote =
-    { chapter : Int
+    { book : Int
     , section : Int
     , content : List String
     }
@@ -99,8 +99,8 @@ viewMeta : Quote -> Html Msg
 viewMeta q =
     h2 []
         [ text <|
-            "Chapter "
-                ++ (toString q.chapter)
+            "Book "
+                ++ (toString q.book)
                 ++ ", section "
                 ++ (toString q.section)
         ]
@@ -115,7 +115,7 @@ viewQuote num quotes =
                     quote
 
                 Nothing ->
-                    { chapter = 0
+                    { book = 0
                     , section = 0
                     , content = [ "Error selecting quote. Please refresh" ]
                     }
@@ -163,6 +163,6 @@ decodeQuotes : Decode.Decoder (Array Quote)
 decodeQuotes =
     Decode.array <|
         Decode.map3 Quote
-            (field "chapter" Decode.int)
+            (field "book" Decode.int)
             (field "section" Decode.int)
             (field "quote" (Decode.list Decode.string))
