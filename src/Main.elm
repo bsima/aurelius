@@ -9,6 +9,8 @@ import Array exposing (Array)
 import Random
 import RemoteData exposing (RemoteData(..), WebData)
 import Markdown
+import Routing exposing (parseLocation, Route(..))
+import Navigation exposing (Location)
 
 
 main : Program Never Model Msg
@@ -31,12 +33,13 @@ type alias Quote =
 type alias Model =
     { quotes : WebData (Array Quote)
     , number : Int
+    , route : Route
     }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( { number = 0, quotes = Loading }
+    ( { number = 0, quotes = Loading, route = QuoteRoute "10" "16" }
     , getQuotes
     )
 
@@ -45,6 +48,7 @@ type Msg
     = Refresh
     | DataResponse (WebData (Array Quote))
     | NewQuote Int
+    | OnLocationChange Location
 
 
 randomQuote : Cmd Msg
@@ -64,6 +68,13 @@ update msg model =
         NewQuote i ->
             ( { model | number = i }, Cmd.none )
 
+        OnLocationChange location ->
+            let
+              newRoute =
+                  parseLocation location
+
+            in
+              ( { model | route = newRoute }, Cmd.none )
 
 subscriptions : Model -> Sub Msg
 subscriptions model =
@@ -72,18 +83,24 @@ subscriptions model =
 
 view : Model -> Html Msg
 view model =
-    case model.quotes of
-        NotAsked ->
-            wrap <| p [] [ text "Initializing." ]
+    case model.route of
+        NotFoundRoute ->
+            wrap <| p [] [ text "Not Found..." ]
 
-        Loading ->
-            wrap <| p [] [ text "Loading..." ]
+        QuoteRoute book section ->
+            case model.quotes of
+                NotAsked ->
+                    wrap <| p [] [ text "Initializing." ]
 
-        Failure err ->
-            wrap <| p [] [ text ("Error: " ++ toString err) ]
+                Loading ->
+                    wrap <| p [] [ text "Loading..." ]
 
-        Success quotes ->
-            wrap <| viewQuote model.number quotes
+                Failure err ->
+                    wrap <| p [] [ text ("Error: " ++ toString err) ]
+
+                Success quotes ->
+                    wrap <| viewQuote quotes book section
+
 
 
 viewMeta : Quote -> Html Msg
@@ -97,19 +114,15 @@ viewMeta q =
         ]
 
 
-viewQuote : Int -> Array Quote -> Html Msg
-viewQuote num quotes =
+viewQuote : Array Quote -> Int -> Int -> Html Msg
+viewQuote quotes book section =
     let
         quote =
-            case Array.get num quotes of
-                Just quote ->
-                    quote
+            List.head
+              (List.filter
+                  (\quote -> if quote.book == book then if quote.section == section then True else False else False )
+                  quotes)
 
-                Nothing ->
-                    { book = 0
-                    , section = 0
-                    , content = [ "Error selecting quote. Please refresh" ]
-                    }
     in
         div []
             [ viewMeta quote
