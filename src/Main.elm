@@ -1,25 +1,25 @@
 module Main exposing (..)
 
+import Array exposing (Array)
 import Html exposing (Html, button, div, text, h1, h2, span, p, article)
-import Html.Events exposing (onClick)
 import Html.Attributes exposing (class, style, id)
+import Html.Events exposing (onClick)
 import Http
 import Json.Decode as Decode exposing (field)
-import Array exposing (Array)
+import Markdown
+import Navigation exposing (Location)
 import Random
 import RemoteData exposing (RemoteData(..), WebData)
-import Markdown
 import Routing exposing (parseLocation, Route(..))
-import Navigation exposing (Location)
 
 
 main : Program Never Model Msg
 main =
-    Html.program
+    Navigation.program OnLocationChange
         { init = init
         , view = view
         , update = update
-        , subscriptions = subscriptions
+        , subscriptions = (\_ -> Sub.none)
         }
 
 
@@ -37,9 +37,12 @@ type alias Model =
     }
 
 
-init : ( Model, Cmd Msg )
-init =
-    ( { number = 0, quotes = Loading, route = QuoteRoute "10" "16" }
+init : Location -> ( Model, Cmd Msg )
+init loc =
+    ( { number = 0
+      , quotes = Loading
+      , route = QuoteRoute "10" "16"
+      }
     , getQuotes
     )
 
@@ -70,15 +73,11 @@ update msg model =
 
         OnLocationChange location ->
             let
-              newRoute =
-                  parseLocation location
-
+                newRoute =
+                    parseLocation location
             in
-              ( { model | route = newRoute }, Cmd.none )
+                ( { model | route = newRoute }, Cmd.none )
 
-subscriptions : Model -> Sub Msg
-subscriptions model =
-    Sub.none
 
 
 view : Model -> Html Msg
@@ -99,8 +98,16 @@ view model =
                     wrap <| p [] [ text ("Error: " ++ toString err) ]
 
                 Success quotes ->
-                    wrap <| viewQuote quotes book section
+                    let
+                        bk =
+                            String.toInt book
+                                |> Result.withDefault 7
 
+                        sec =
+                            String.toInt section
+                                |> Result.withDefault 59
+                    in
+                        wrap <| div [] <| Array.toList <| viewQuote quotes bk sec
 
 
 viewMeta : Quote -> Html Msg
@@ -114,24 +121,28 @@ viewMeta q =
         ]
 
 
-viewQuote : Array Quote -> Int -> Int -> Html Msg
+viewQuote : Array Quote -> Int -> Int -> Array (Html Msg)
 viewQuote quotes book section =
     let
-        quote =
-            List.head
-              (List.filter
-                  (\quote -> if quote.book == book then if quote.section == section then True else False else False )
-                  quotes)
+        pred q =
+            if q.book == book && q.section == section then
+                True
+            else
+                False
 
-    in
-        div []
-            [ viewMeta quote
-            , article []
-                [ quote.content
-                    |> String.join "\n\n"
-                    |> Markdown.toHtml [ class "content" ]
+        viewQuote_ quote =
+            div []
+                [ viewMeta quote
+                , article []
+                    [ quote.content
+                        |> String.join "\n\n"
+                        |> Markdown.toHtml [ class "content" ]
+                    ]
                 ]
-            ]
+    in
+        quotes
+            |> Array.filter pred
+            |> Array.map viewQuote_
 
 
 wrap : Html Msg -> Html Msg
