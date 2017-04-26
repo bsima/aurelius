@@ -10977,26 +10977,34 @@ var _user$project$Main$update = F2(
 			case 'Refresh':
 				return {ctor: '_Tuple2', _0: model, _1: _user$project$Main$randomQuote};
 			case 'DataResponse':
+				var cmd = function () {
+					var _p3 = model.route;
+					if (_p3.ctor === 'Index') {
+						return _user$project$Main$randomQuote;
+					} else {
+						return _elm_lang$core$Platform_Cmd$none;
+					}
+				}();
 				return {
 					ctor: '_Tuple2',
 					_0: _elm_lang$core$Native_Utils.update(
 						model,
 						{quotes: _p2._0}),
-					_1: _user$project$Main$randomQuote
+					_1: cmd
 				};
 			case 'NewQuote':
-				var _p3 = A2(
+				var _p4 = A2(
 					_krisajenkins$remotedata$RemoteData_Infix_ops['<$>'],
 					_user$project$Quote$get(_p2._0),
 					model.quotes);
-				if ((_p3.ctor === 'Success') && (_p3._0.ctor === 'Just')) {
-					var _p4 = _p3._0._0;
+				if ((_p4.ctor === 'Success') && (_p4._0.ctor === 'Just')) {
+					var _p5 = _p4._0._0;
 					return {
 						ctor: '_Tuple2',
 						_0: _elm_lang$core$Native_Utils.update(
 							model,
 							{
-								route: A2(_user$project$Routing$QuoteRoute, _p4.book, _p4.section)
+								route: A2(_user$project$Routing$QuoteRoute, _p5.book, _p5.section)
 							}),
 						_1: _elm_lang$navigation$Navigation$newUrl(
 							A2(
@@ -11004,11 +11012,11 @@ var _user$project$Main$update = F2(
 								'/#/',
 								A2(
 									_elm_lang$core$Basics_ops['++'],
-									_elm_lang$core$Basics$toString(_p4.book),
+									_elm_lang$core$Basics$toString(_p5.book),
 									A2(
 										_elm_lang$core$Basics_ops['++'],
 										'/',
-										_elm_lang$core$Basics$toString(_p4.section)))))
+										_elm_lang$core$Basics$toString(_p5.section)))))
 					};
 				} else {
 					return {ctor: '_Tuple2', _0: model, _1: _elm_lang$core$Platform_Cmd$none};
@@ -11029,7 +11037,7 @@ var _user$project$Main$init = function (loc) {
 		ctor: '_Tuple2',
 		_0: {
 			quotes: _krisajenkins$remotedata$RemoteData$Loading,
-			route: A2(_user$project$Routing$QuoteRoute, 10, 16)
+			route: _user$project$Routing$parseLocation(loc)
 		},
 		_1: _user$project$Quote$fetch
 	};
@@ -11041,7 +11049,7 @@ var _user$project$Main$main = A2(
 		init: _user$project$Main$init,
 		view: _user$project$Main$view,
 		update: _user$project$Main$update,
-		subscriptions: function (_p5) {
+		subscriptions: function (_p6) {
 			return _elm_lang$core$Platform_Sub$none;
 		}
 	})();
