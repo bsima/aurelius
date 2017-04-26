@@ -7,6 +7,7 @@ import Markdown
 import Http
 import RemoteData
 import Json.Decode as Decode exposing (field)
+import Routing exposing (..)
 
 
 listGet : Int -> List a -> Maybe a
@@ -36,9 +37,17 @@ select book section quotes =
                 Result.Err (QuoteSelectError book section)
 
 
-view : List Quote -> Int -> Int -> Html Msg
-view quotes book section =
+view : List Quote -> Route -> Html Msg
+view quotes route =
     let
+        ( book, section ) =
+            case route of
+                QuoteRoute book section ->
+                    ( book, section )
+
+                _ ->
+                    ( 0, 0 )
+
         view_ quote =
             div []
                 [ viewMeta quote
@@ -50,7 +59,7 @@ view quotes book section =
                 ]
 
         helpMsg =
-            Markdown.toHtml [ class "help" ]
+            Markdown.toHtml [ class "content" ]
                 """This is an open source project, and not all of the
                    _Meditations_ are transcribed yet. If you would like to add a
                    quote from the _Meditations_, please consider helping out at
@@ -62,7 +71,7 @@ view quotes book section =
 
             Err (QuoteSelectError book section) ->
                 div []
-                    [ p []
+                    [ h2 []
                         [ text <|
                             "Could not find Book "
                                 ++ (toString book)
@@ -70,7 +79,7 @@ view quotes book section =
                                 ++ (toString section)
                                 ++ ". "
                         ]
-                    , p [] [ helpMsg ]
+                    , article [] [ helpMsg ]
                     ]
 
 

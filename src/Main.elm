@@ -3,13 +3,11 @@ module Main exposing (..)
 import Html exposing (Html, button, div, text, h1, h2, span, p, article)
 import Html.Attributes exposing (class, style, id)
 import Html.Events exposing (onClick)
-import Http
-import Json.Decode as Decode exposing (field)
-import Markdown
 import Navigation exposing (Location)
 import Quote
 import Random
 import RemoteData exposing (RemoteData(..), WebData)
+import RemoteData.Infix exposing (..)
 import Routing exposing (parseLocation, Route(..))
 import Types exposing (..)
 
@@ -26,8 +24,7 @@ main =
 
 init : Location -> ( Model, Cmd Msg )
 init loc =
-    ( { number = 0
-      , quotes = Loading
+    ( { quotes = Loading
       , route = QuoteRoute 10 16
       }
     , Quote.fetch
@@ -49,7 +46,18 @@ update msg model =
             ( { model | quotes = resp }, randomQuote )
 
         NewQuote i ->
-            ( model, Cmd.none )
+            case Quote.get i <$> model.quotes of
+                Success (Just quote) ->
+                    ( { model | route = QuoteRoute quote.book quote.section }
+                    , Navigation.newUrl <|
+                        "/#/"
+                            ++ (toString quote.book)
+                            ++ "/"
+                            ++ (toString quote.section)
+                    )
+
+                _ ->
+                    ( model, Cmd.none )
 
         OnLocationChange location ->
             let
@@ -77,7 +85,7 @@ view model =
                     wrap <| p [] [ text ("Error: " ++ toString err) ]
 
                 Success quotes ->
-                    wrap <| Quote.view quotes book section
+                    wrap <| Quote.view quotes model.route
 
 
 wrap : Html Msg -> Html Msg

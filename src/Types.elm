@@ -14,7 +14,6 @@ type alias Quote =
 
 type alias Model =
     { quotes : WebData (List Quote)
-    , number : Int
     , route : Route
     }
 
