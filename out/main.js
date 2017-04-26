@@ -10698,7 +10698,7 @@ var _user$project$Quote$viewMeta = function (q) {
 						_elm_lang$core$Basics$toString(q.book),
 						A2(
 							_elm_lang$core$Basics_ops['++'],
-							', section ',
+							', Section ',
 							_elm_lang$core$Basics$toString(q.section))))),
 			_1: {ctor: '[]'}
 		});
