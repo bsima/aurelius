@@ -10949,16 +10949,34 @@ var _user$project$Main$view = function (model) {
 				case 'Failure':
 					return _user$project$Main$wrap(
 						A2(
-							_elm_lang$html$Html$p,
+							_elm_lang$html$Html$div,
 							{ctor: '[]'},
 							{
 								ctor: '::',
-								_0: _elm_lang$html$Html$text(
-									A2(
-										_elm_lang$core$Basics_ops['++'],
-										'Error: ',
-										_elm_lang$core$Basics$toString(_p1._0))),
-								_1: {ctor: '[]'}
+								_0: A2(
+									_elm_lang$html$Html$p,
+									{ctor: '[]'},
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html$text(
+											A2(
+												_elm_lang$core$Basics_ops['++'],
+												'Error: ',
+												_elm_lang$core$Basics$toString(_p1._0))),
+										_1: {ctor: '[]'}
+									}),
+								_1: {
+									ctor: '::',
+									_0: A2(
+										_evancz$elm_markdown$Markdown$toHtml,
+										{
+											ctor: '::',
+											_0: _elm_lang$html$Html_Attributes$class('content'),
+											_1: {ctor: '[]'}
+										},
+										'Try refreshing?\n\n                              If the problem persists, please report\n                              the error at [GitHub](https://github.com/bsima/aurelius/issues)\n                              and I will fix it right away. Thanks!'),
+									_1: {ctor: '[]'}
+								}
 							}));
 				default:
 					return _user$project$Main$wrap(
