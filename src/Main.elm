@@ -4,6 +4,7 @@ import Html exposing (Html, button, div, text, h1, h2, span, p, article)
 import Html.Attributes exposing (class, style, id)
 import Html.Events exposing (onClick)
 import Navigation exposing (Location)
+import Markdown
 import Quote
 import Random
 import RemoteData exposing (RemoteData(..), WebData)
@@ -94,7 +95,16 @@ view model =
                     wrap <| p [] [ text "Loading..." ]
 
                 Failure err ->
-                    wrap <| p [] [ text ("Error: " ++ toString err) ]
+                    wrap <|
+                        div []
+                            [ p [] [ text <| "Error: " ++ (toString err) ]
+                            , Markdown.toHtml [ class "content" ]
+                                """Try refreshing?
+
+                              If the problem persists, please report
+                              the error at [GitHub](https://github.com/bsima/aurelius/issues)
+                              and I will fix it right away. Thanks!"""
+                            ]
 
                 Success quotes ->
                     wrap <| Quote.view quotes model.route
