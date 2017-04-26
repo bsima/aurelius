@@ -25,7 +25,7 @@ main =
 init : Location -> ( Model, Cmd Msg )
 init loc =
     ( { quotes = Loading
-      , route = QuoteRoute 10 16
+      , route = parseLocation loc
       }
     , Quote.fetch
     )
@@ -43,7 +43,16 @@ update msg model =
             ( model, randomQuote )
 
         DataResponse resp ->
-            ( { model | quotes = resp }, randomQuote )
+            let
+                cmd =
+                    case model.route of
+                        Index ->
+                            randomQuote
+
+                        _ ->
+                            Cmd.none
+            in
+                ( { model | quotes = resp }, cmd )
 
         NewQuote i ->
             case Quote.get i <$> model.quotes of
