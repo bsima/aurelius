@@ -89,7 +89,7 @@ viewMeta q =
         [ text <|
             "Book "
                 ++ (toString q.book)
-                ++ ", section "
+                ++ ", Section "
                 ++ (toString q.section)
         ]
 
