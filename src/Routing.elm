@@ -5,6 +5,7 @@ import UrlParser exposing (..)
 
 type Route
     = QuoteRoute Int Int
+    | Index
     | NotFoundRoute
 
 
@@ -12,6 +13,7 @@ matchers : Parser (Route -> a) a
 matchers =
     oneOf
         [ map QuoteRoute  ( int </> int)
+        , map Index top
         ]
 
 

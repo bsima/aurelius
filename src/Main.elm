@@ -73,6 +73,9 @@ view model =
         NotFoundRoute ->
             wrap <| p [] [ text "Not Found..." ]
 
+        Index ->
+            wrap <| p [] [ text "Loading..." ]
+
         QuoteRoute book section ->
             case model.quotes of
                 NotAsked ->
