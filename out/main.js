@@ -10617,6 +10617,7 @@ var _krisajenkins$remotedata$RemoteData_Infix_ops = _krisajenkins$remotedata$Rem
 _krisajenkins$remotedata$RemoteData_Infix_ops['<$>'] = _krisajenkins$remotedata$RemoteData$map;
 
 var _user$project$Routing$NotFoundRoute = {ctor: 'NotFoundRoute'};
+var _user$project$Routing$Index = {ctor: 'Index'};
 var _user$project$Routing$QuoteRoute = F2(
 	function (a, b) {
 		return {ctor: 'QuoteRoute', _0: a, _1: b};
@@ -10628,7 +10629,11 @@ var _user$project$Routing$matchers = _evancz$url_parser$UrlParser$oneOf(
 			_evancz$url_parser$UrlParser$map,
 			_user$project$Routing$QuoteRoute,
 			A2(_evancz$url_parser$UrlParser_ops['</>'], _evancz$url_parser$UrlParser$int, _evancz$url_parser$UrlParser$int)),
-		_1: {ctor: '[]'}
+		_1: {
+			ctor: '::',
+			_0: A2(_evancz$url_parser$UrlParser$map, _user$project$Routing$Index, _evancz$url_parser$UrlParser$top),
+			_1: {ctor: '[]'}
+		}
 	});
 var _user$project$Routing$parseLocation = function (location) {
 	var _p0 = A2(_evancz$url_parser$UrlParser$parseHash, _user$project$Routing$matchers, location);
@@ -10897,57 +10902,68 @@ var _user$project$Main$wrap = function (kids) {
 };
 var _user$project$Main$view = function (model) {
 	var _p0 = model.route;
-	if (_p0.ctor === 'NotFoundRoute') {
-		return _user$project$Main$wrap(
-			A2(
-				_elm_lang$html$Html$p,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('Not Found...'),
-					_1: {ctor: '[]'}
-				}));
-	} else {
-		var _p1 = model.quotes;
-		switch (_p1.ctor) {
-			case 'NotAsked':
-				return _user$project$Main$wrap(
-					A2(
-						_elm_lang$html$Html$p,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('Initializing.'),
-							_1: {ctor: '[]'}
-						}));
-			case 'Loading':
-				return _user$project$Main$wrap(
-					A2(
-						_elm_lang$html$Html$p,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text('Loading...'),
-							_1: {ctor: '[]'}
-						}));
-			case 'Failure':
-				return _user$project$Main$wrap(
-					A2(
-						_elm_lang$html$Html$p,
-						{ctor: '[]'},
-						{
-							ctor: '::',
-							_0: _elm_lang$html$Html$text(
-								A2(
-									_elm_lang$core$Basics_ops['++'],
-									'Error: ',
-									_elm_lang$core$Basics$toString(_p1._0))),
-							_1: {ctor: '[]'}
-						}));
-			default:
-				return _user$project$Main$wrap(
-					A2(_user$project$Quote$view, _p1._0, model.route));
-		}
+	switch (_p0.ctor) {
+		case 'NotFoundRoute':
+			return _user$project$Main$wrap(
+				A2(
+					_elm_lang$html$Html$p,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Not Found...'),
+						_1: {ctor: '[]'}
+					}));
+		case 'Index':
+			return _user$project$Main$wrap(
+				A2(
+					_elm_lang$html$Html$p,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Loading...'),
+						_1: {ctor: '[]'}
+					}));
+		default:
+			var _p1 = model.quotes;
+			switch (_p1.ctor) {
+				case 'NotAsked':
+					return _user$project$Main$wrap(
+						A2(
+							_elm_lang$html$Html$p,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('Initializing.'),
+								_1: {ctor: '[]'}
+							}));
+				case 'Loading':
+					return _user$project$Main$wrap(
+						A2(
+							_elm_lang$html$Html$p,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('Loading...'),
+								_1: {ctor: '[]'}
+							}));
+				case 'Failure':
+					return _user$project$Main$wrap(
+						A2(
+							_elm_lang$html$Html$p,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text(
+									A2(
+										_elm_lang$core$Basics_ops['++'],
+										'Error: ',
+										_elm_lang$core$Basics$toString(_p1._0))),
+								_1: {ctor: '[]'}
+							}));
+				default:
+					return _user$project$Main$wrap(
+						A2(_user$project$Quote$view, _p1._0, model.route));
+			}
 	}
 };
 var _user$project$Main$randomQuote = A2(
