@@ -1,6 +1,5 @@
 module Main exposing (..)
 
-import Array exposing (Array)
 import Html exposing (Html, button, div, text, h1, h2, span, p, article)
 import Html.Attributes exposing (class, style, id)
 import Html.Events exposing (onClick)
@@ -8,9 +7,11 @@ import Http
 import Json.Decode as Decode exposing (field)
 import Markdown
 import Navigation exposing (Location)
+import Quote
 import Random
 import RemoteData exposing (RemoteData(..), WebData)
 import Routing exposing (parseLocation, Route(..))
+import Types exposing (..)
 
 
 main : Program Never Model Msg
@@ -23,35 +24,14 @@ main =
         }
 
 
-type alias Quote =
-    { book : Int
-    , section : Int
-    , content : List String
-    }
-
-
-type alias Model =
-    { quotes : WebData (Array Quote)
-    , number : Int
-    , route : Route
-    }
-
-
 init : Location -> ( Model, Cmd Msg )
 init loc =
     ( { number = 0
       , quotes = Loading
-      , route = QuoteRoute "10" "16"
+      , route = QuoteRoute 10 16
       }
-    , getQuotes
+    , Quote.fetch
     )
-
-
-type Msg
-    = Refresh
-    | DataResponse (WebData (Array Quote))
-    | NewQuote Int
-    | OnLocationChange Location
 
 
 randomQuote : Cmd Msg
@@ -69,7 +49,7 @@ update msg model =
             ( { model | quotes = resp }, randomQuote )
 
         NewQuote i ->
-            ( { model | number = i }, Cmd.none )
+            ( model, Cmd.none )
 
         OnLocationChange location ->
             let
@@ -77,7 +57,6 @@ update msg model =
                     parseLocation location
             in
                 ( { model | route = newRoute }, Cmd.none )
-
 
 
 view : Model -> Html Msg
@@ -98,51 +77,7 @@ view model =
                     wrap <| p [] [ text ("Error: " ++ toString err) ]
 
                 Success quotes ->
-                    let
-                        bk =
-                            String.toInt book
-                                |> Result.withDefault 7
-
-                        sec =
-                            String.toInt section
-                                |> Result.withDefault 59
-                    in
-                        wrap <| div [] <| Array.toList <| viewQuote quotes bk sec
-
-
-viewMeta : Quote -> Html Msg
-viewMeta q =
-    h2 []
-        [ text <|
-            "Book "
-                ++ (toString q.book)
-                ++ ", section "
-                ++ (toString q.section)
-        ]
-
-
-viewQuote : Array Quote -> Int -> Int -> Array (Html Msg)
-viewQuote quotes book section =
-    let
-        pred q =
-            if q.book == book && q.section == section then
-                True
-            else
-                False
-
-        viewQuote_ quote =
-            div []
-                [ viewMeta quote
-                , article []
-                    [ quote.content
-                        |> String.join "\n\n"
-                        |> Markdown.toHtml [ class "content" ]
-                    ]
-                ]
-    in
-        quotes
-            |> Array.filter pred
-            |> Array.map viewQuote_
+                    wrap <| Quote.view quotes book section
 
 
 wrap : Html Msg -> Html Msg
@@ -162,24 +97,3 @@ wrap kids =
         , p [ class "subtitle" ] [ text "Meditations" ]
         , kids
         ]
-
-
-quotesUri : String
-quotesUri =
-    "https://raw.githubusercontent.com/bsima/aurelius/gh-pages/data/marcus.json"
-
-
-getQuotes : Cmd Msg
-getQuotes =
-    Http.get quotesUri decodeQuotes
-        |> RemoteData.sendRequest
-        |> Cmd.map DataResponse
-
-
-decodeQuotes : Decode.Decoder (Array Quote)
-decodeQuotes =
-    Decode.array <|
-        Decode.map3 Quote
-            (field "book" Decode.int)
-            (field "section" Decode.int)
-            (field "quote" (Decode.list Decode.string))

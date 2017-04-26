@@ -4,14 +4,14 @@ import Navigation exposing (Location)
 import UrlParser exposing (..)
 
 type Route
-    = QuoteRoute String String -- Strings are for Book and Section numbers.
+    = QuoteRoute Int Int
     | NotFoundRoute
 
 
 matchers : Parser (Route -> a) a
 matchers =
     oneOf
-        [ map QuoteRoute  ( string </> string)
+        [ map QuoteRoute  ( int </> int)
         ]
 
 
