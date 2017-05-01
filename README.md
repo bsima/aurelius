@@ -8,9 +8,9 @@ http://aurelius.co
 
 ## Would you like to help out by adding quotes?
 
-I would love you have your help! So far, I've only transcribed my
+I would love to have your help! So far, I've only transcribed my
 favorite quotes, but there are many more Aurelius quotes that deserve
-to be available.
+to be on this website.
 
 The quotes are stored in `data/marcus.json`. The format is:
 
