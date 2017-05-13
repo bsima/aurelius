@@ -6,13 +6,13 @@ Quotes from Marcus Aurelius
 http://aurelius.co
 
 
-## Help out by adding quotes!
+## Help out by adding quotes
 
 I would love to have your help! So far, I've only transcribed my
 favorite quotes, but there are many more Aurelius quotes that deserve
 to be on this website.
 
-[**Click here to easily a quickly submit a quote.**](https://goo.gl/forms/zivB95KX91rzcPHT2)
+[**Click here to easily & quickly submit a quote.**](https://goo.gl/forms/zivB95KX91rzcPHT2)
 
 That link takes you to a form in Google Docs. I will see the entries
 in the form and will add the quotes in my free time.
