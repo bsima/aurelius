@@ -6,13 +6,20 @@ Quotes from Marcus Aurelius
 http://aurelius.co
 
 
-## Would you like to help out by adding quotes?
+## Help out by adding quotes!
 
 I would love to have your help! So far, I've only transcribed my
 favorite quotes, but there are many more Aurelius quotes that deserve
 to be on this website.
 
-The quotes are stored in `data/marcus.json`. The format is:
+[**Click here to easily a quickly submit a quote.**](https://goo.gl/forms/zivB95KX91rzcPHT2)
+
+That link takes you to a form in Google Docs. I will see the entries
+in the form and will add the quotes in my free time.
+
+If you know a bit of code and GitHub, you can help by adding quotes
+direcly to the source. The quotes are stored in
+`data/marcus.json`. The format is:
 
 - the document is a list of quotes
 - each quote is a JSON object
