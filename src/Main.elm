@@ -150,5 +150,10 @@ navbar =
                 , target "_blank"
                 ]
                 [ text "Submit a Quote" ]
+            , a
+                [ href "https://github.com/bsima/aurelius"
+                , target "_blank"
+                ]
+                [ text "GitHub" ]
             ]
         ]
