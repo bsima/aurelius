@@ -10617,6 +10617,7 @@ var _krisajenkins$remotedata$RemoteData_Infix_ops = _krisajenkins$remotedata$Rem
 _krisajenkins$remotedata$RemoteData_Infix_ops['<$>'] = _krisajenkins$remotedata$RemoteData$map;
 
 var _user$project$Routing$NotFoundRoute = {ctor: 'NotFoundRoute'};
+var _user$project$Routing$AllQuotes = {ctor: 'AllQuotes'};
 var _user$project$Routing$Index = {ctor: 'Index'};
 var _user$project$Routing$QuoteRoute = F2(
 	function (a, b) {
@@ -10631,8 +10632,15 @@ var _user$project$Routing$matchers = _evancz$url_parser$UrlParser$oneOf(
 			A2(_evancz$url_parser$UrlParser_ops['</>'], _evancz$url_parser$UrlParser$int, _evancz$url_parser$UrlParser$int)),
 		_1: {
 			ctor: '::',
-			_0: A2(_evancz$url_parser$UrlParser$map, _user$project$Routing$Index, _evancz$url_parser$UrlParser$top),
-			_1: {ctor: '[]'}
+			_0: A2(
+				_evancz$url_parser$UrlParser$map,
+				_user$project$Routing$AllQuotes,
+				_evancz$url_parser$UrlParser$s('all')),
+			_1: {
+				ctor: '::',
+				_0: A2(_evancz$url_parser$UrlParser$map, _user$project$Routing$Index, _evancz$url_parser$UrlParser$top),
+				_1: {ctor: '[]'}
+			}
 		}
 	});
 var _user$project$Routing$parseLocation = function (location) {
@@ -10703,6 +10711,34 @@ var _user$project$Quote$viewMeta = function (q) {
 			_1: {ctor: '[]'}
 		});
 };
+var _user$project$Quote$view_ = function (quote) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _user$project$Quote$viewMeta(quote),
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$article,
+					{ctor: '[]'},
+					{
+						ctor: '::',
+						_0: A2(
+							_evancz$elm_markdown$Markdown$toHtml,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$class('content'),
+								_1: {ctor: '[]'}
+							},
+							A2(_elm_lang$core$String$join, '\n\n', quote.content)),
+						_1: {ctor: '[]'}
+					}),
+				_1: {ctor: '[]'}
+			}
+		});
+};
 var _user$project$Quote$select = F3(
 	function (book, section, quotes) {
 		var pred = function (q) {
@@ -10717,7 +10753,7 @@ var _user$project$Quote$select = F3(
 		}
 	});
 var _user$project$Quote$view = F2(
-	function (quotes, route) {
+	function (route, quotes) {
 		var helpMsg = A2(
 			_evancz$elm_markdown$Markdown$toHtml,
 			{
@@ -10726,34 +10762,6 @@ var _user$project$Quote$view = F2(
 				_1: {ctor: '[]'}
 			},
 			'This is an open source project, and not all of the\n                   _Meditations_ are transcribed yet. If you would like to add a\n                   quote from the _Meditations_, please consider helping out at\n                   [the GitHub project](https://github.com/bsima/aurelius). Thanks!');
-		var view_ = function (quote) {
-			return A2(
-				_elm_lang$html$Html$div,
-				{ctor: '[]'},
-				{
-					ctor: '::',
-					_0: _user$project$Quote$viewMeta(quote),
-					_1: {
-						ctor: '::',
-						_0: A2(
-							_elm_lang$html$Html$article,
-							{ctor: '[]'},
-							{
-								ctor: '::',
-								_0: A2(
-									_evancz$elm_markdown$Markdown$toHtml,
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html_Attributes$class('content'),
-										_1: {ctor: '[]'}
-									},
-									A2(_elm_lang$core$String$join, '\n\n', quote.content)),
-								_1: {ctor: '[]'}
-							}),
-						_1: {ctor: '[]'}
-					}
-				});
-		};
 		var _p1 = function () {
 			var _p2 = route;
 			if (_p2.ctor === 'QuoteRoute') {
@@ -10766,7 +10774,7 @@ var _user$project$Quote$view = F2(
 		var section = _p1._1;
 		var _p3 = A3(_user$project$Quote$select, book, section, quotes);
 		if (_p3.ctor === 'Ok') {
-			return view_(_p3._0);
+			return _user$project$Quote$view_(_p3._0);
 		} else {
 			return A2(
 				_elm_lang$html$Html$div,
@@ -10820,89 +10828,197 @@ var _user$project$Quote$get = F2(
 		return A2(_user$project$Quote$listGet, i, quotes);
 	});
 
-var _user$project$Main$wrap = function (kids) {
-	return A2(
-		_elm_lang$html$Html$div,
-		{
-			ctor: '::',
-			_0: _elm_lang$html$Html_Attributes$id('content'),
-			_1: {
-				ctor: '::',
-				_0: _elm_lang$html$Html_Attributes$class('wrapper'),
-				_1: {ctor: '[]'}
-			}
-		},
-		{
-			ctor: '::',
-			_0: A2(
-				_elm_lang$html$Html$button,
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html_Attributes$class('sans'),
-					_1: {
-						ctor: '::',
-						_0: _elm_lang$html$Html_Attributes$style(
-							{
-								ctor: '::',
-								_0: {ctor: '_Tuple2', _0: 'border', _1: 'none'},
-								_1: {
-									ctor: '::',
-									_0: {ctor: '_Tuple2', _0: 'background', _1: 'transparent'},
-									_1: {
-										ctor: '::',
-										_0: {ctor: '_Tuple2', _0: 'margin-top', _1: '1rem'},
-										_1: {ctor: '[]'}
-									}
-								}
-							}),
-						_1: {
-							ctor: '::',
-							_0: _elm_lang$html$Html_Events$onClick(_user$project$Types$Refresh),
-							_1: {ctor: '[]'}
-						}
-					}
-				},
-				{
-					ctor: '::',
-					_0: _elm_lang$html$Html$text('Refresh'),
-					_1: {ctor: '[]'}
-				}),
-			_1: {
+var _user$project$Main$navbar = A2(
+	_elm_lang$html$Html$header,
+	{
+		ctor: '::',
+		_0: _elm_lang$html$Html_Attributes$class('scroll wrapper'),
+		_1: {ctor: '[]'}
+	},
+	{
+		ctor: '::',
+		_0: A2(
+			_elm_lang$html$Html$nav,
+			{ctor: '[]'},
+			{
 				ctor: '::',
 				_0: A2(
-					_elm_lang$html$Html$h1,
-					{ctor: '[]'},
+					_elm_lang$html$Html$a,
 					{
 						ctor: '::',
-						_0: _elm_lang$html$Html$text('Marcus Aurelius'),
+						_0: _elm_lang$html$Html_Attributes$href('#'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$id('refresh'),
+							_1: {
+								ctor: '::',
+								_0: _elm_lang$html$Html_Events$onClick(_user$project$Types$Refresh),
+								_1: {ctor: '[]'}
+							}
+						}
+					},
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html$text('Refresh'),
 						_1: {ctor: '[]'}
 					}),
 				_1: {
 					ctor: '::',
 					_0: A2(
-						_elm_lang$html$Html$p,
+						_elm_lang$html$Html$a,
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html_Attributes$class('subtitle'),
+							_0: _elm_lang$html$Html_Attributes$href('#/all'),
 							_1: {ctor: '[]'}
 						},
 						{
 							ctor: '::',
-							_0: _elm_lang$html$Html$text('Meditations'),
+							_0: _elm_lang$html$Html$text('All Quotes'),
 							_1: {ctor: '[]'}
 						}),
 					_1: {
 						ctor: '::',
-						_0: kids,
+						_0: A2(
+							_elm_lang$html$Html$a,
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html_Attributes$href('https://goo.gl/forms/zivB95KX91rzcPHT2'),
+								_1: {
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$target('_blank'),
+									_1: {ctor: '[]'}
+								}
+							},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('Submit a Quote'),
+								_1: {ctor: '[]'}
+							}),
 						_1: {ctor: '[]'}
 					}
 				}
+			}),
+		_1: {ctor: '[]'}
+	});
+var _user$project$Main$wrap = function (kids) {
+	return A2(
+		_elm_lang$html$Html$div,
+		{ctor: '[]'},
+		{
+			ctor: '::',
+			_0: _user$project$Main$navbar,
+			_1: {
+				ctor: '::',
+				_0: A2(
+					_elm_lang$html$Html$div,
+					{
+						ctor: '::',
+						_0: _elm_lang$html$Html_Attributes$id('content'),
+						_1: {
+							ctor: '::',
+							_0: _elm_lang$html$Html_Attributes$class('wrapper'),
+							_1: {ctor: '[]'}
+						}
+					},
+					{
+						ctor: '::',
+						_0: A2(
+							_elm_lang$html$Html$h1,
+							{ctor: '[]'},
+							{
+								ctor: '::',
+								_0: _elm_lang$html$Html$text('Marcus Aurelius'),
+								_1: {ctor: '[]'}
+							}),
+						_1: {
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$p,
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html_Attributes$class('subtitle'),
+									_1: {ctor: '[]'}
+								},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text('Meditations'),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: kids,
+								_1: {ctor: '[]'}
+							}
+						}
+					}),
+				_1: {ctor: '[]'}
 			}
 		});
 };
+var _user$project$Main$shoveWebData = F2(
+	function (viewer, data) {
+		var _p0 = data;
+		switch (_p0.ctor) {
+			case 'NotAsked':
+				return _user$project$Main$wrap(
+					A2(
+						_elm_lang$html$Html$p,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Initializing.'),
+							_1: {ctor: '[]'}
+						}));
+			case 'Loading':
+				return _user$project$Main$wrap(
+					A2(
+						_elm_lang$html$Html$p,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: _elm_lang$html$Html$text('Loading...'),
+							_1: {ctor: '[]'}
+						}));
+			case 'Failure':
+				return _user$project$Main$wrap(
+					A2(
+						_elm_lang$html$Html$div,
+						{ctor: '[]'},
+						{
+							ctor: '::',
+							_0: A2(
+								_elm_lang$html$Html$p,
+								{ctor: '[]'},
+								{
+									ctor: '::',
+									_0: _elm_lang$html$Html$text(
+										A2(
+											_elm_lang$core$Basics_ops['++'],
+											'Error: ',
+											_elm_lang$core$Basics$toString(_p0._0))),
+									_1: {ctor: '[]'}
+								}),
+							_1: {
+								ctor: '::',
+								_0: A2(
+									_evancz$elm_markdown$Markdown$toHtml,
+									{
+										ctor: '::',
+										_0: _elm_lang$html$Html_Attributes$class('content'),
+										_1: {ctor: '[]'}
+									},
+									'\nTry refreshing?\n\nIf the problem persists, please report\nthe error at [GitHub](https://github.com/bsima/aurelius/issues)\nand I will fix it right away. Thanks!\n'),
+								_1: {ctor: '[]'}
+							}
+						}));
+			default:
+				return _user$project$Main$wrap(
+					viewer(_p0._0));
+		}
+	});
 var _user$project$Main$view = function (model) {
-	var _p0 = model.route;
-	switch (_p0.ctor) {
+	var _p1 = model.route;
+	switch (_p1.ctor) {
 		case 'NotFoundRoute':
 			return _user$project$Main$wrap(
 				A2(
@@ -10923,65 +11039,21 @@ var _user$project$Main$view = function (model) {
 						_0: _elm_lang$html$Html$text('Loading...'),
 						_1: {ctor: '[]'}
 					}));
+		case 'AllQuotes':
+			return A2(
+				_user$project$Main$shoveWebData,
+				function (xs) {
+					return A2(
+						_elm_lang$html$Html$div,
+						{ctor: '[]'},
+						A2(_elm_lang$core$List$map, _user$project$Quote$view_, xs));
+				},
+				model.quotes);
 		default:
-			var _p1 = model.quotes;
-			switch (_p1.ctor) {
-				case 'NotAsked':
-					return _user$project$Main$wrap(
-						A2(
-							_elm_lang$html$Html$p,
-							{ctor: '[]'},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text('Initializing.'),
-								_1: {ctor: '[]'}
-							}));
-				case 'Loading':
-					return _user$project$Main$wrap(
-						A2(
-							_elm_lang$html$Html$p,
-							{ctor: '[]'},
-							{
-								ctor: '::',
-								_0: _elm_lang$html$Html$text('Loading...'),
-								_1: {ctor: '[]'}
-							}));
-				case 'Failure':
-					return _user$project$Main$wrap(
-						A2(
-							_elm_lang$html$Html$div,
-							{ctor: '[]'},
-							{
-								ctor: '::',
-								_0: A2(
-									_elm_lang$html$Html$p,
-									{ctor: '[]'},
-									{
-										ctor: '::',
-										_0: _elm_lang$html$Html$text(
-											A2(
-												_elm_lang$core$Basics_ops['++'],
-												'Error: ',
-												_elm_lang$core$Basics$toString(_p1._0))),
-										_1: {ctor: '[]'}
-									}),
-								_1: {
-									ctor: '::',
-									_0: A2(
-										_evancz$elm_markdown$Markdown$toHtml,
-										{
-											ctor: '::',
-											_0: _elm_lang$html$Html_Attributes$class('content'),
-											_1: {ctor: '[]'}
-										},
-										'Try refreshing?\n\n                              If the problem persists, please report\n                              the error at [GitHub](https://github.com/bsima/aurelius/issues)\n                              and I will fix it right away. Thanks!'),
-									_1: {ctor: '[]'}
-								}
-							}));
-				default:
-					return _user$project$Main$wrap(
-						A2(_user$project$Quote$view, _p1._0, model.route));
-			}
+			return A2(
+				_user$project$Main$shoveWebData,
+				_user$project$Quote$view(model.route),
+				model.quotes);
 	}
 };
 var _user$project$Main$randomQuote = A2(
