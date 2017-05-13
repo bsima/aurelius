@@ -37,8 +37,20 @@ select book section quotes =
                 Result.Err (QuoteSelectError book section)
 
 
-view : List Quote -> Route -> Html Msg
-view quotes route =
+view_ : Quote -> Html Msg
+view_ quote =
+    div []
+        [ viewMeta quote
+        , article []
+            [ quote.content
+                |> String.join "\n\n"
+                |> Markdown.toHtml [ class "content" ]
+            ]
+        ]
+
+
+view : Route -> List Quote -> Html Msg
+view route quotes =
     let
         ( book, section ) =
             case route of
@@ -47,16 +59,6 @@ view quotes route =
 
                 _ ->
                     ( 0, 0 )
-
-        view_ quote =
-            div []
-                [ viewMeta quote
-                , article []
-                    [ quote.content
-                        |> String.join "\n\n"
-                        |> Markdown.toHtml [ class "content" ]
-                    ]
-                ]
 
         helpMsg =
             Markdown.toHtml [ class "content" ]

@@ -105,6 +105,14 @@ header a:hover
 { color: #999
 }
 
+header a#refresh
+{ color: #999
+}
+
+header a#refresh:hover
+{ color: #111
+}
+
 #content,
 h1, h2, h3, h4, h5, h6
 { font-family: et-book, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif

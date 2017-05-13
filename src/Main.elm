@@ -1,7 +1,7 @@
 module Main exposing (..)
 
-import Html exposing (Html, button, div, text, h1, h2, span, p, article)
-import Html.Attributes exposing (class, style, id)
+import Html exposing (Html, button, div, text, h1, h2, span, p, article, header, nav, a)
+import Html.Attributes exposing (class, style, id, href, target)
 import Html.Events exposing (onClick)
 import Navigation exposing (Location)
 import Markdown
@@ -77,6 +77,33 @@ update msg model =
                 ( { model | route = newRoute }, Cmd.none )
 
 
+shoveWebData : (a -> Html Msg) -> WebData a -> Html Msg
+shoveWebData viewer data =
+    case data of
+        NotAsked ->
+            wrap <| p [] [ text "Initializing." ]
+
+        Loading ->
+            wrap <| p [] [ text "Loading..." ]
+
+        Failure err ->
+            wrap <|
+                div []
+                    [ p [] [ text <| "Error: " ++ (toString err) ]
+                    , Markdown.toHtml [ class "content" ]
+                        """
+Try refreshing?
+
+If the problem persists, please report
+the error at [GitHub](https://github.com/bsima/aurelius/issues)
+and I will fix it right away. Thanks!
+"""
+                    ]
+
+        Success stuff ->
+            wrap <| viewer stuff
+
+
 view : Model -> Html Msg
 view model =
     case model.route of
@@ -86,44 +113,42 @@ view model =
         Index ->
             wrap <| p [] [ text "Loading..." ]
 
+        AllQuotes ->
+            model.quotes
+                |> shoveWebData (\xs -> div [] <| List.map Quote.view_ xs)
+
         QuoteRoute book section ->
-            case model.quotes of
-                NotAsked ->
-                    wrap <| p [] [ text "Initializing." ]
-
-                Loading ->
-                    wrap <| p [] [ text "Loading..." ]
-
-                Failure err ->
-                    wrap <|
-                        div []
-                            [ p [] [ text <| "Error: " ++ (toString err) ]
-                            , Markdown.toHtml [ class "content" ]
-                                """Try refreshing?
-
-                              If the problem persists, please report
-                              the error at [GitHub](https://github.com/bsima/aurelius/issues)
-                              and I will fix it right away. Thanks!"""
-                            ]
-
-                Success quotes ->
-                    wrap <| Quote.view quotes model.route
+            shoveWebData (Quote.view model.route) model.quotes
 
 
 wrap : Html Msg -> Html Msg
 wrap kids =
-    div [ id "content", class "wrapper" ]
-        [ button
-            [ class "sans"
-            , style
-                [ ( "border", "none" )
-                , ( "background", "transparent" )
-                , ( "margin-top", "1rem" )
-                ]
-            , onClick Refresh
+    div []
+        [ navbar
+        , div
+            [ id "content", class "wrapper" ]
+            [ h1 [] [ text "Marcus Aurelius" ]
+            , p [ class "subtitle" ] [ text "Meditations" ]
+            , kids
             ]
-            [ text "Refresh" ]
-        , h1 [] [ text "Marcus Aurelius" ]
-        , p [ class "subtitle" ] [ text "Meditations" ]
-        , kids
+        ]
+
+
+navbar : Html Msg
+navbar =
+    header [ class "scroll wrapper" ]
+        [ nav []
+            [ a
+                [ href "#"
+                , id "refresh"
+                , onClick Refresh
+                ]
+                [ text "Refresh" ]
+            , a [ href "#/all" ] [ text "All Quotes" ]
+            , a
+                [ href "https://goo.gl/forms/zivB95KX91rzcPHT2"
+                , target "_blank"
+                ]
+                [ text "Submit a Quote" ]
+            ]
         ]
