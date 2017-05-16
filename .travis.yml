@@ -1,0 +1,15 @@
+language: node_js
+node_js:
+    - "node"
+
+before_install:
+    - "npm install elm"
+
+script: make clean build
+
+deploy:
+    provider: pages
+    skip_cleanup: true
+    github_token: $GITHUB_TOKEN
+    on:
+        branch: master
