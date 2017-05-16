@@ -1,4 +1,5 @@
-aurelius
+aurelius [![Build
+Status](https://travis-ci.org/bsima/aurelius.svg?branch=master)](https://travis-ci.org/bsima/aurelius)
 ========
 
 Quotes from Marcus Aurelius
