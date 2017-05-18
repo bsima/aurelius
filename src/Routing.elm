@@ -8,6 +8,7 @@ type Route
     | Index
     | AllQuotes
     | NotFoundRoute
+    | Ben
 
 
 matchers : Parser (Route -> a) a
@@ -16,6 +17,7 @@ matchers =
         [ map QuoteRoute  ( int </> int)
         , map AllQuotes (s "all")
         , map Index top
+        , map Ben (s "ben")
         ]
 
 
