@@ -123,7 +123,7 @@ view model =
 
         Ben ->
             model.quotes
-                |> shoveWebData (List.filterMap isaFav >> List.map Quote.view_ >> div [])
+                |> shoveWebData (List.filterMap (isaFav bensFavs) >> List.map Quote.view_ >> div [])
 
 wrap : Html Msg -> Html Msg
 wrap kids =
@@ -163,9 +163,9 @@ navbar =
         ]
 
 
-isaFav : Quote -> Maybe Quote
-isaFav quote =
-    if Set.member ( quote.book, quote.section ) bensFavs
+isaFav : Set.Set ( Int, Int ) -> Quote -> Maybe Quote
+isaFav favSet quote =
+    if Set.member ( quote.book, quote.section ) favSet
     then Just quote
     else Nothing
 
