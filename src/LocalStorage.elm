@@ -1,14 +1,17 @@
 -- copied from https://github.com/elm-lang/persistent-cache/blob/master/src/LocalStorage.elm
 -- The persistent-cache package isn't published yet, and I just need access to LocalStorage anyway
 
-module LocalStorage exposing
-  ( get
-  , set
-  , remove
-  , clear
-  , keys
-  , Error(..)
-  )
+
+module LocalStorage
+    exposing
+        ( get
+        , set
+        , remove
+        , clear
+        , keys
+        , Error
+        , Error(..)
+        )
 
 {-| Low-level bindings to the [localStorage][] API.
 
@@ -22,7 +25,6 @@ module LocalStorage exposing
 
 -}
 
-
 import Native.LocalStorage
 import Task exposing (Task)
 
@@ -35,8 +37,8 @@ import Task exposing (Task)
     happen.
 -}
 type Error
-  = QuotaExceeded
-  | Disabled
+    = QuotaExceeded
+    | Disabled
 
 
 {-| Get the value at a particular key.
@@ -45,7 +47,7 @@ type Error
 -}
 get : String -> Task Error (Maybe String)
 get =
-  Native.LocalStorage.get
+    Native.LocalStorage.get
 
 
 {-| Set a key to a particular value. If the key does not exist, it is added.
@@ -58,7 +60,7 @@ error if you are adding enough data to cross that threshold.
 -}
 set : String -> String -> Task Error ()
 set =
-  Native.LocalStorage.set
+    Native.LocalStorage.set
 
 
 {-| Remove a particular key and its corresponding value.
@@ -67,14 +69,14 @@ set =
 -}
 remove : String -> Task Error ()
 remove =
-  Native.LocalStorage.remove
+    Native.LocalStorage.remove
 
 
 {-| Remove everything in local storage.
 -}
 clear : Task Error ()
 clear =
-  Native.LocalStorage.clear
+    Native.LocalStorage.clear
 
 
 {-| Get all the keys currently stored. So if you `set` two entries named
@@ -83,4 +85,4 @@ clear =
 -}
 keys : Task Error (List String)
 keys =
-  Native.LocalStorage.keys
+    Native.LocalStorage.keys

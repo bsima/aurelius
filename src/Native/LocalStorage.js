@@ -1,7 +1,7 @@
 // copied from https://github.com/elm-lang/persistent-cache/blob/master/src/Native/LocalStorage.js
 // will replace with the "persistent-cache" package when it's released
 
-var _elm_lang$persistent_cache$Native_LocalStorage = function() {
+var _user$project$Native_LocalStorage = function() {
 
 if (!localStorage || !localStorage.getItem || !localStorage.setItem)
 {

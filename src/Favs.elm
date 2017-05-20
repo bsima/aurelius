@@ -1,19 +1,30 @@
-module Favs exposing (..)
+module Favs exposing (isa, filter, bens)
 
-import Types exposing (..)
-import Set
+import Types exposing (Quote)
+import Set exposing (Set)
 
 
-isaFav : Set.Set ( Int, Int ) -> Quote -> Maybe Quote
-isaFav favSet quote =
+{-| Check if the quote is a favorite, if its in the set of favs
+-}
+isa : Set ( Int, Int ) -> Quote -> Maybe Quote
+isa favSet quote =
     if Set.member ( quote.book, quote.section ) favSet then
         Just quote
     else
         Nothing
 
 
-bensFavs : Set.Set ( Int, Int )
-bensFavs =
+{-| Really bad filter function, but it gets the job done
+-}
+filter : Set ( Int, Int ) -> List Quote -> List Quote
+filter favSet =
+    List.filterMap (isa favSet)
+
+
+{-| My favorites :D
+-}
+bens : Set.Set ( Int, Int )
+bens =
     Set.fromList
         [ ( 2, 1 )
         , ( 2, 5 )
