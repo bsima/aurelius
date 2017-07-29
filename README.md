@@ -39,3 +39,14 @@ If you have any questions, [open an issue][newissue] and I will
 respond ASAP.
 
 [newissue]: https://github.com/bsima/aurelius/issues/new
+
+## Developing
+
+To build the project for development, do:
+
+``` shell
+make clean build && elm reactor
+```
+
+You'll of course need [Elm installed](https://guide.elm-lang.org/install.html)
+first.
