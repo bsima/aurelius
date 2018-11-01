@@ -30,7 +30,7 @@ select book section quotes =
                 False
     in
         case List.filter pred quotes of
-            x :: xs ->
+            x :: _ ->
                 Result.Ok x
 
             _ ->
@@ -54,8 +54,8 @@ view route quotes =
     let
         ( book, section ) =
             case route of
-                QuoteRoute book section ->
-                    ( book, section )
+                QuoteRoute bk sec ->
+                    ( bk, sec )
 
                 _ ->
                     ( 0, 0 )
@@ -76,13 +76,16 @@ view route quotes =
                     [ h2 []
                         [ text <|
                             "Could not find Book "
-                                ++ (toString book)
+                                ++ toString book
                                 ++ ", Section "
-                                ++ (toString section)
+                                ++ toString section
                                 ++ ". "
                         ]
                     , article [] [ helpMsg ]
                     ]
+
+            Err _ ->
+                div [] [ article [] [ text "Unknown error." ] ]
 
 
 viewMeta : Quote -> Html Msg
@@ -90,9 +93,9 @@ viewMeta q =
     h2 []
         [ text <|
             "Book "
-                ++ (toString q.book)
+                ++ toString q.book
                 ++ ", Section "
-                ++ (toString q.section)
+                ++ toString q.section
         ]
 
 

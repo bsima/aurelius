@@ -7,4 +7,4 @@ out/main.js:
 	elm make --yes src/Main.elm --warn --output out/main.js
 
 clean:
-	rm -rf out
+	rm -f out/main.js
