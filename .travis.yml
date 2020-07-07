@@ -1,0 +1,12 @@
+language: nix
+notifications:
+    email: false
+
+script: nix-shell --command "make clean build"
+
+deploy:
+    provider: pages
+    skip_cleanup: true
+    github_token: $GITHUB_TOKEN
+    on:
+        branch: master
