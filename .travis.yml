@@ -2,10 +2,7 @@ language: nix
 notifications:
     email: false
 
-before_install:
-    - make shell
-
-script: make clean build
+script: nix-shell --command "make clean build"
 
 deploy:
     provider: pages
