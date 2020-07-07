@@ -4,7 +4,7 @@ build: out/main.js
 
 out/main.js:
 	mkdir -p out
-	elm make Main.elm --debug --output out/main.js
+	elm make Main.elm --optimize --output out/main.js
 
 clean:
 	rm -rf out/main.js
